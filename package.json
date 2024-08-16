@@ -1,5 +1,5 @@
 {
-  "name": "rip7560_contracts",
+  "name": "@account-abstraction/rip7560",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:eth-infinitism/rip7560_contracts.git",
