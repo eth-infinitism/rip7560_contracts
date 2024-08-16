@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.23;
 
 interface IRip7560EntryPoint {
     function acceptAccount(uint256 validAfter, uint256 validUntil) external;

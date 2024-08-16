@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity 0.8.23;
 
 /// @title NonceManager
 /// @notice The NonceManager manages nonce of smart accounts using RIP-7560.

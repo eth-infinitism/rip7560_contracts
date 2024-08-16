@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity 0.8.23;
 
 // Testing utilities
 import { Test } from "forge-std/Test.sol";
@@ -10,7 +10,7 @@ contract NonceManagerTest is Test {
     address private constant alice = 0x0000000000000000000000000000000000007777;
     uint192 public aliceKey;
     error InvalidLength();
-    NonceManager nonceManager;
+    NonceManager public nonceManager;
 
     /// @dev Sets up the test suite.
     function setUp() public virtual {
