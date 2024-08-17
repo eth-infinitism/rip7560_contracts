@@ -8,6 +8,7 @@
   "scripts": {
     "test-hardhat": "hardhat test",
     "test-forge": "forge test",
+    "compile-hardhat": "npx hardhat compile",
     "ci": "yarn test-hardhat && yarn test-forge"
   },
   "devDependencies": {
