@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.23;
 
-struct RIP7560TransactionStruct {
+struct RIP7560Transaction {
     address sender;
+    uint256 nonceKey;
     uint256 nonce;
     uint256 validationGasLimit;
     uint256 paymasterValidationGasLimit;

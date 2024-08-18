@@ -11,9 +11,9 @@ library RIP7560Utils {
     //struct version, as defined in RIP-7560
     uint constant VERSION = 0;
 
-    function decodeTransaction(uint256 version, bytes calldata transaction) internal pure returns (RIP7560TransactionStruct memory) {
+    function decodeTransaction(uint256 version, bytes calldata transaction) internal pure returns (RIP7560Transaction memory) {
         require(version == VERSION, "RIP7560Utils: unsupported version");
-        return abi.decode(transaction, (RIP7560TransactionStruct));
+        return abi.decode(transaction, (RIP7560Transaction));
     }
 
     function accountAcceptTransaction(
