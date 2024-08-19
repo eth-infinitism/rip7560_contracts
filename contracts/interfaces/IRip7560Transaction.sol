@@ -16,6 +16,6 @@ struct RIP7560Transaction {
     bytes paymasterData;
     address deployer;
     bytes deployerData;
-    bytes callData;
-    bytes signature;
+    bytes executionData;
+    bytes authorizationData;
 }
