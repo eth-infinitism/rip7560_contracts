@@ -25,9 +25,7 @@ interface IRip7560EntryPoint {
         address indexed paymaster,
         address indexed deployer,
         uint256 nonce,
-        bool success,
-        uint256 actualGasCost,
-        uint256 actualGasUsed
+        uint256 executionStatus
     );
 
     /**
