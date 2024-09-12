@@ -4,7 +4,7 @@ pragma solidity ^0.8.23;
 struct RIP7560Transaction {
     address sender;
     uint256 nonceKey;
-    uint256 nonce;
+    uint256 nonceSequence;
     uint256 validationGasLimit;
     uint256 paymasterValidationGasLimit;
     uint256 postOpGasLimit;
