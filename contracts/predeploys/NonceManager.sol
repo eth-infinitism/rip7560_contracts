@@ -26,7 +26,7 @@ contract NonceManager {
     /// @return nonce a full nonce to pass for next transaction with given sender and key.
     function _get(bytes calldata /* data */) internal view returns (uint256 nonce) {
         assembly {
-        // Check if calldata is 44 bytes long
+        // Check if calldata is 20+32 bytes long
             if iszero(eq(calldatasize(), 52)) {
                 mstore(0x00, 0x947d5a84) // 'InvalidLength()'
                 revert(0x1c, 0x04)
