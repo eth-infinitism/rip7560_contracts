@@ -11,6 +11,13 @@ contract NonceManager {
     /// @notice The EntryPoint address defined at RIP-7560.
     address internal constant AA_ENTRY_POINT = 0x0000000000000000000000000000000000007560;
 
+    /// @notice There are no public functions in the NonceManager and the action is determined by the caller address.
+    ///
+    /// In order to query the current 'nonceSequence' of an address for a given 'nonceKey' make a view call with data:
+    /// sender{20 bytes} nonceKey{32 bytes}
+    ///
+    /// In order to validate and increment the current 'nonceSequence' of an address AA_ENTRY_POINT calls it with data:
+    /// sender{20 bytes} nonceKey{32 bytes} nonceSequence{32 bytes}
     fallback(bytes calldata data) external returns (bytes memory) {
         if (msg.sender == AA_ENTRY_POINT) {
             _validateIncrement(data);
@@ -26,22 +33,21 @@ contract NonceManager {
     /// @return nonce a full nonce to pass for next transaction with given sender and key.
     function _get(bytes calldata /* data */) internal view returns (uint256 nonce) {
         assembly {
-        // Check if calldata is 44 bytes long
-            if iszero(eq(calldatasize(), 44)) {
+        // Check if calldata is 20+32 bytes long
+            if iszero(eq(calldatasize(), 52)) {
                 mstore(0x00, 0x947d5a84) // 'InvalidLength()'
                 revert(0x1c, 0x04)
             }
 
             let ptr := mload(0x40)
-            calldatacopy(ptr, 0, 44)
+            calldatacopy(ptr, 0, 52)
 
-        // Extract key and sender from calldata
-            let key := shr(64, mload(add(ptr, 20)))
-            mstore(0x00, key)
-            mstore(0x14, shr(96, mload(ptr)))
+        // Extract sender and key from calldata
+            mstore(0x00, shr(96, mload(ptr)))
+            mstore(0x14, mload(add(ptr, 20)))
 
         // Load nonce from storage
-            nonce := or(shl(64, key), sload(keccak256(0x04, 0x30)))
+            nonce := sload(keccak256(0x00, 0x34))
         }
     }
 
@@ -51,16 +57,16 @@ contract NonceManager {
             let ptr := mload(0x40)
             calldatacopy(ptr, 0, calldatasize())
 
-        // Store key and sender in memory
-            mstore(0x00, shr(64, mload(add(ptr, 20))))
-            mstore(0x14, shr(96, mload(ptr)))
+        // Store sender and key in memory
+            mstore(0x00, shr(96, mload(ptr)))
+            mstore(0x14, mload(add(ptr, 20)))
 
         // Calculate storage slot and load current nonce
-            let nonceSlot := keccak256(0x04, 0x30)
+            let nonceSlot := keccak256(0x00, 0x34)
             let currentNonce := sload(nonceSlot)
 
         // Revert if nonce mismatch
-            if iszero(eq(shr(192, mload(add(ptr, 44))), currentNonce)) {
+            if iszero(eq(mload(add(ptr, 52)), currentNonce)) {
                 mstore(0, 0)
                 revert(0, 0) // Revert if nonce mismatch
             }
