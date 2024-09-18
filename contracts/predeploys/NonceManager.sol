@@ -11,6 +11,13 @@ contract NonceManager {
     /// @notice The EntryPoint address defined at RIP-7560.
     address internal constant AA_ENTRY_POINT = 0x0000000000000000000000000000000000007560;
 
+    /// @notice There are no public functions in the NonceManager and the action is determined by the caller address.
+    ///
+    /// In order to query the current 'nonceSequence' of an address for a given 'nonceKey' make a view call with data:
+    /// sender{20 bytes} nonceKey{32 bytes}
+    ///
+    /// In order to validate and increment the current 'nonceSequence' of an address AA_ENTRY_POINT calls it with data:
+    /// sender{20 bytes} nonceKey{32 bytes} nonceSequence{32 bytes}
     fallback(bytes calldata data) external returns (bytes memory) {
         if (msg.sender == AA_ENTRY_POINT) {
             _validateIncrement(data);
