@@ -27,11 +27,12 @@ contract NonceManager {
         }
     }
 
-    /// @notice Return the next nonce for this sender. Within a given key, the nonce values are sequenced
+    /// @notice Return the next nonce sequence for this sender.
+    /// @notice Within a given key, the nonce values are sequenced.
     ///         (starting with zero, and incremented by one on each transaction).
     ///         But transactions with different keys can come with arbitrary order.
-    /// @return nonce a full nonce to pass for next transaction with given sender and key.
-    function _get(bytes calldata /* data */) internal view returns (uint256 nonce) {
+    /// @return nonceSeq a nonce sequence value to pass for next transaction with given sender and key.
+    function _get(bytes calldata /* data */) internal view returns (uint256 nonceSeq) {
         assembly {
         // Check if calldata is 20+32 bytes long
             if iszero(eq(calldatasize(), 52)) {
@@ -46,12 +47,12 @@ contract NonceManager {
             mstore(0x00, shr(96, mload(ptr)))
             mstore(0x14, mload(add(ptr, 20)))
 
-        // Load nonce from storage
-            nonce := sload(keccak256(0x00, 0x34))
+        // Load nonce sequence from storage
+            nonceSeq := sload(keccak256(0x00, 0x34))
         }
     }
 
-    /// @notice validate nonce uniqueness for this account. Called by AA_ENTRY_POINT.
+    /// @notice validate nonce key and sequence uniqueness for this account. Called by AA_ENTRY_POINT.
     function _validateIncrement(bytes calldata /* data */) internal {
         assembly {
             let ptr := mload(0x40)
@@ -61,18 +62,18 @@ contract NonceManager {
             mstore(0x00, shr(96, mload(ptr)))
             mstore(0x14, mload(add(ptr, 20)))
 
-        // Calculate storage slot and load current nonce
-            let nonceSlot := keccak256(0x00, 0x34)
-            let currentNonce := sload(nonceSlot)
+        // Calculate storage slot and load current nonce sequence
+            let nonceSeqSlot := keccak256(0x00, 0x34)
+            let currentNonceSeq := sload(nonceSeqSlot)
 
         // Revert if nonce mismatch
-            if iszero(eq(mload(add(ptr, 52)), currentNonce)) {
+            if iszero(eq(mload(add(ptr, 52)), currentNonceSeq)) {
                 mstore(0, 0)
                 revert(0, 0) // Revert if nonce mismatch
             }
 
-        // Increment nonce
-            sstore(nonceSlot, add(currentNonce, 1))
+        // Increment nonce sequence
+            sstore(nonceSeqSlot, add(currentNonceSeq, 1))
         }
     }
 }
