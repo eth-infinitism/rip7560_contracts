@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.12;
+pragma solidity ^0.8.23;
 
 import "@account-abstraction/contracts/core/StakeManager.sol";
 import "../interfaces/IRip7560StakeManager.sol";
